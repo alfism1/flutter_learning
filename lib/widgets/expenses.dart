@@ -55,15 +55,46 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
-  void deleteExpense(Expense expense) {
+  void removeExpense(Expense expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
       // _registeredExpenses.removeWhere((expense) => expense.id == id);
     });
+
+    // show a snackbar to undo the deletion of the expense item
+    // from the list of expenses in the app state (i.e. _registeredExpenses) and the UI (i.e. ExpensesList)
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Expense removed!'),
+        duration: const Duration(seconds: 5),
+        action: SnackBarAction(
+          label: 'UNDO',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, expense);
+            });
+            // addExpense(expense);
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text('No expenses added yet!'),
+    );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemove: removeExpense,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpenseTracker'),
@@ -79,10 +110,7 @@ class _ExpensesState extends State<Expenses> {
           const Text('The chart'),
           // need Expanded to make the list scrollable
           Expanded(
-            child: ExpensesList(
-              expenses: _registeredExpenses,
-              onRemove: deleteExpense,
-            ),
+            child: mainContent,
           ),
         ],
       ),
