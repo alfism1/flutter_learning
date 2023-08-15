@@ -18,10 +18,6 @@ void main() {
       darkTheme: ThemeData.dark().copyWith(
         useMaterial3: true,
         colorScheme: kDarkColorScheme,
-        // appBarTheme: const AppBarTheme().copyWith(
-        //   backgroundColor: kDarkColorScheme.onPrimaryContainer,
-        //   foregroundColor: kDarkColorScheme.primaryContainer,
-        // ),
         cardTheme: const CardTheme().copyWith(
           color: kDarkColorScheme.secondaryContainer,
           margin: const EdgeInsets.symmetric(
@@ -35,22 +31,22 @@ void main() {
             // foregroundColor: kDarkColorScheme.onPrimaryContainer,
           ),
         ),
-        textTheme: ThemeData().textTheme.copyWith(
-              titleLarge: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: kDarkColorScheme.onSecondaryContainer,
-              ),
-              titleMedium: TextStyle(
-                // fontSize: 16,
-                fontWeight: FontWeight.normal,
-                color: kDarkColorScheme.onSecondaryContainer,
-              ),
-              bodyMedium: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: kDarkColorScheme.onSecondaryContainer,
-              ),
-            ),
+        // textTheme: ThemeData().textTheme.copyWith(
+        //       titleLarge: TextStyle(
+        //         fontSize: 16,
+        //         fontWeight: FontWeight.bold,
+        //         color: kDarkColorScheme.onSecondaryContainer,
+        //       ),
+        //       titleMedium: TextStyle(
+        //         // fontSize: 16,
+        //         fontWeight: FontWeight.normal,
+        //         color: kDarkColorScheme.onSecondaryContainer,
+        //       ),
+        //       bodyMedium: TextStyle(
+        //         fontWeight: FontWeight.normal,
+        //         color: kDarkColorScheme.onSecondaryContainer,
+        //       ),
+        //     ),
       ),
       theme: ThemeData().copyWith(
         useMaterial3: true,
