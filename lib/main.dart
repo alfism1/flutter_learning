@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 
 import 'package:first_app/widgets/expenses.dart';
 
@@ -13,11 +13,11 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
-  // lock orientation to portrait
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]).then((value) {
+  // // lock orientation to portrait
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  // ]).then((value) {
     runApp(
       MaterialApp(
         title: 'Flutter Tutorial',
@@ -86,5 +86,5 @@ void main() {
         home: const Expenses(),
       ),
     );
-  });
+  // });
 }
