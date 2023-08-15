@@ -143,84 +143,25 @@ class _NewExpenseState extends State<NewExpense> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: titleController,
-                            maxLength: 50,
-                            // The decoration is a property that lets you customize the appearance of the input field.
-                            // The InputDecoration widget lets you customize the appearance of the input field.
-                            decoration: const InputDecoration(
-                              label: Text('Title'),
-                              // border: OutlineInputBorder(),
-                            ),
-                          ),
+                          child:
+                              TitleTextField(titleController: titleController),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: TextField(
-                            controller: amountController,
-                            keyboardType: TextInputType.number,
-                            // The decoration is a property that lets you customize the appearance of the input field.
-                            // The InputDecoration widget lets you customize the appearance of the input field.
-                            decoration: const InputDecoration(
-                              prefixText: '\$ ',
-                              label: Text('Amount'),
-                              // border: OutlineInputBorder(),
-                            ),
-                          ),
+                          child: AmountTextField(
+                              amountController: amountController),
                         ),
                       ],
                     )
                   else
-                    TextField(
-                      controller: titleController,
-                      maxLength: 50,
-                      // The decoration is a property that lets you customize the appearance of the input field.
-                      // The InputDecoration widget lets you customize the appearance of the input field.
-                      decoration: const InputDecoration(
-                        label: Text('Title'),
-                        // border: OutlineInputBorder(),
-                      ),
-                    ),
+                    TitleTextField(titleController: titleController),
                   if (width >= 600)
                     Row(
                       children: [
-                        DropdownButton(
-                          value: selectedCategory,
-                          items: Category.values
-                              .map(
-                                (category) => DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category.name.toUpperCase()),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value == null) {
-                                return;
-                              }
-                              selectedCategory = value;
-                            });
-                          },
-                        ),
+                        categoryDropdown(),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                selectedDate == null
-                                    ? 'No date chosen'
-                                    // selectedDate! - the ! tells Dart that selectedDate is not null
-                                    : formatter.format(selectedDate!),
-                              ),
-                              IconButton(
-                                onPressed: presentDatePicker,
-                                icon: const Icon(Icons.calendar_month),
-                              ),
-                            ],
-                          ),
+                          child: selectDateWidget(),
                         ),
                       ],
                     )
@@ -228,36 +169,12 @@ class _NewExpenseState extends State<NewExpense> {
                     Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: amountController,
-                            keyboardType: TextInputType.number,
-                            // The decoration is a property that lets you customize the appearance of the input field.
-                            // The InputDecoration widget lets you customize the appearance of the input field.
-                            decoration: const InputDecoration(
-                              prefixText: '\$ ',
-                              label: Text('Amount'),
-                              // border: OutlineInputBorder(),
-                            ),
-                          ),
+                          child: AmountTextField(
+                              amountController: amountController),
                         ),
                         const SizedBox(width: 5),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                selectedDate == null
-                                    ? 'No date chosen'
-                                    // selectedDate! - the ! tells Dart that selectedDate is not null
-                                    : formatter.format(selectedDate!),
-                              ),
-                              IconButton(
-                                onPressed: presentDatePicker,
-                                icon: const Icon(Icons.calendar_month),
-                              ),
-                            ],
-                          ),
+                          child: selectDateWidget(),
                         ),
                       ],
                     ),
@@ -266,53 +183,19 @@ class _NewExpenseState extends State<NewExpense> {
                     Row(
                       children: [
                         const Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancel"),
-                        ),
+                        const CancelButton(),
                         const SizedBox(width: 5),
-                        ElevatedButton(
-                          onPressed: submitExpenseData,
-                          child: const Text("Save Expense"),
-                        ),
+                        saveExpenseButton(),
                       ],
                     )
                   else
                     Row(
                       children: <Widget>[
-                        DropdownButton(
-                          value: selectedCategory,
-                          items: Category.values
-                              .map(
-                                (category) => DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category.name.toUpperCase()),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value == null) {
-                                return;
-                              }
-                              selectedCategory = value;
-                            });
-                          },
-                        ),
+                        categoryDropdown(),
                         const Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancel"),
-                        ),
+                        const CancelButton(),
                         const SizedBox(width: 5),
-                        ElevatedButton(
-                          onPressed: submitExpenseData,
-                          child: const Text("Save Expense"),
-                        ),
+                        saveExpenseButton(),
                       ],
                     )
                 ],
@@ -321,6 +204,117 @@ class _NewExpenseState extends State<NewExpense> {
           ),
         );
       },
+    );
+  }
+
+  DropdownButton<Category> categoryDropdown() {
+    return DropdownButton(
+      value: selectedCategory,
+      items: Category.values
+          .map(
+            (category) => DropdownMenuItem(
+              value: category,
+              child: Text(category.name.toUpperCase()),
+            ),
+          )
+          .toList(),
+      onChanged: (value) {
+        setState(() {
+          if (value == null) {
+            return;
+          }
+          selectedCategory = value;
+        });
+      },
+    );
+  }
+
+  ElevatedButton saveExpenseButton() {
+    return ElevatedButton(
+      onPressed: submitExpenseData,
+      child: const Text("Save Expense"),
+    );
+  }
+
+  Row selectDateWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          selectedDate == null
+              ? 'No date chosen'
+              // selectedDate! - the ! tells Dart that selectedDate is not null
+              : formatter.format(selectedDate!),
+        ),
+        IconButton(
+          onPressed: presentDatePicker,
+          icon: const Icon(Icons.calendar_month),
+        ),
+      ],
+    );
+  }
+}
+
+class CancelButton extends StatelessWidget {
+  const CancelButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      child: const Text("Cancel"),
+    );
+  }
+}
+
+class AmountTextField extends StatelessWidget {
+  const AmountTextField({
+    super.key,
+    required this.amountController,
+  });
+
+  final TextEditingController amountController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: amountController,
+      keyboardType: TextInputType.number,
+      // The decoration is a property that lets you customize the appearance of the input field.
+      // The InputDecoration widget lets you customize the appearance of the input field.
+      decoration: const InputDecoration(
+        prefixText: '\$ ',
+        label: Text('Amount'),
+        // border: OutlineInputBorder(),
+      ),
+    );
+  }
+}
+
+class TitleTextField extends StatelessWidget {
+  const TitleTextField({
+    super.key,
+    required this.titleController,
+  });
+
+  final TextEditingController titleController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: titleController,
+      maxLength: 50,
+      // The decoration is a property that lets you customize the appearance of the input field.
+      // The InputDecoration widget lets you customize the appearance of the input field.
+      decoration: const InputDecoration(
+        label: Text('Title'),
+        // border: OutlineInputBorder(),
+      ),
     );
   }
 }
