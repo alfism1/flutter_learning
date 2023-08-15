@@ -101,94 +101,201 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: titleController,
-            maxLength: 50,
-            // The decoration is a property that lets you customize the appearance of the input field.
-            // The InputDecoration widget lets you customize the appearance of the input field.
-            decoration: const InputDecoration(
-              label: Text('Title'),
-              // border: OutlineInputBorder(),
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final width = constraints.maxWidth;
+
+        return SizedBox(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+              child: Column(
+                children: [
+                  if (width >= 600)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: titleController,
+                            maxLength: 50,
+                            // The decoration is a property that lets you customize the appearance of the input field.
+                            // The InputDecoration widget lets you customize the appearance of the input field.
+                            decoration: const InputDecoration(
+                              label: Text('Title'),
+                              // border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: TextField(
+                            controller: amountController,
+                            keyboardType: TextInputType.number,
+                            // The decoration is a property that lets you customize the appearance of the input field.
+                            // The InputDecoration widget lets you customize the appearance of the input field.
+                            decoration: const InputDecoration(
+                              prefixText: '\$ ',
+                              label: Text('Amount'),
+                              // border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    TextField(
+                      controller: titleController,
+                      maxLength: 50,
+                      // The decoration is a property that lets you customize the appearance of the input field.
+                      // The InputDecoration widget lets you customize the appearance of the input field.
+                      decoration: const InputDecoration(
+                        label: Text('Title'),
+                        // border: OutlineInputBorder(),
+                      ),
+                    ),
+                  if (width >= 600)
+                    Row(
+                      children: [
+                        DropdownButton(
+                          value: selectedCategory,
+                          items: Category.values
+                              .map(
+                                (category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category.name.toUpperCase()),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              if (value == null) {
+                                return;
+                              }
+                              selectedCategory = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                selectedDate == null
+                                    ? 'No date chosen'
+                                    // selectedDate! - the ! tells Dart that selectedDate is not null
+                                    : formatter.format(selectedDate!),
+                              ),
+                              IconButton(
+                                onPressed: presentDatePicker,
+                                icon: const Icon(Icons.calendar_month),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: amountController,
+                            keyboardType: TextInputType.number,
+                            // The decoration is a property that lets you customize the appearance of the input field.
+                            // The InputDecoration widget lets you customize the appearance of the input field.
+                            decoration: const InputDecoration(
+                              prefixText: '\$ ',
+                              label: Text('Amount'),
+                              // border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                selectedDate == null
+                                    ? 'No date chosen'
+                                    // selectedDate! - the ! tells Dart that selectedDate is not null
+                                    : formatter.format(selectedDate!),
+                              ),
+                              IconButton(
+                                onPressed: presentDatePicker,
+                                icon: const Icon(Icons.calendar_month),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+                  if (width >= 600)
+                    Row(
+                      children: [
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          onPressed: submitExpenseData,
+                          child: const Text("Save Expense"),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: <Widget>[
+                        DropdownButton(
+                          value: selectedCategory,
+                          items: Category.values
+                              .map(
+                                (category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category.name.toUpperCase()),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              if (value == null) {
+                                return;
+                              }
+                              selectedCategory = value;
+                            });
+                          },
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          onPressed: submitExpenseData,
+                          child: const Text("Save Expense"),
+                        ),
+                      ],
+                    )
+                ],
+              ),
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: amountController,
-                  keyboardType: TextInputType.number,
-                  // The decoration is a property that lets you customize the appearance of the input field.
-                  // The InputDecoration widget lets you customize the appearance of the input field.
-                  decoration: const InputDecoration(
-                    prefixText: '\$ ',
-                    label: Text('Amount'),
-                    // border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 5),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      selectedDate == null
-                          ? 'No date chosen'
-                          // selectedDate! - the ! tells Dart that selectedDate is not null
-                          : formatter.format(selectedDate!),
-                    ),
-                    IconButton(
-                      onPressed: presentDatePicker,
-                      icon: const Icon(Icons.calendar_month),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: <Widget>[
-              DropdownButton(
-                value: selectedCategory,
-                items: Category.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category.name.toUpperCase()),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    if (value == null) {
-                      return;
-                    }
-                    selectedCategory = value;
-                  });
-                },
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancel"),
-              ),
-              const SizedBox(width: 5),
-              ElevatedButton(
-                onPressed: submitExpenseData,
-                child: const Text("Save Expense"),
-              ),
-            ],
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }

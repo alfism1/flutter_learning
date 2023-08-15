@@ -38,6 +38,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpensesOverlay() async {
     var newExpenseObject = await showModalBottomSheet(
+      useSafeArea: true,
       context: context,
       isScrollControlled: true, // makes the modal full screen
       builder: (context) {
