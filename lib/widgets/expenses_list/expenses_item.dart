@@ -25,7 +25,10 @@ class ExpenseItem extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                Text('\$${expense.amount.toStringAsFixed(2)}'),
+                Text(
+                  '\$${expense.amount.toStringAsFixed(2)}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 // Spacer is a widget that takes up as much space as it can.
                 // It's useful for separating widgets.
                 // It's also useful for making widgets take up equal space.
@@ -36,7 +39,10 @@ class ExpenseItem extends StatelessWidget {
                   children: [
                     Icon(categoryIcons[expense.category]),
                     const SizedBox(width: 8),
-                    Text(expense.formattedDate),
+                    Text(
+                      expense.formattedDate,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ],
                 ),
               ],
